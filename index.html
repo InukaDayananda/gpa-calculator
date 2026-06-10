@@ -3,146 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Engineering GPA Calculator & Local Vault</title>
+    <title>Universal Academic GPA Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-50 font-sans min-h-screen pb-12">
 
+    <div class="bg-blue-50 border-b border-blue-200 py-3 px-4 text-center text-sm text-blue-800 font-medium flex items-center justify-center gap-2">
+        <i class="fa-solid fa-circle-info text-blue-600"></i>
+        <span>Using a different university or faculty grading system? You can fully customize grades and GPV criteria anytime using the <strong>Settings Panel</strong>!</span>
+    </div>
+
     <header class="bg-blue-900 text-white py-6 shadow-md mb-8">
-        <div class="max-w-5xl mx-auto px-4 flex justify-between items-center">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
             <div>
-                <h1 class="text-2xl font-bold tracking-wide">Faculty of Engineering</h1>
-                <p class="text-sm text-blue-200">Personal GPA Tracker (Data Saved Locally on Your Device)</p>
+                <h1 class="text-2xl font-bold tracking-wide">Universal GPA Portal</h1>
+                <p class="text-sm text-blue-200">Customizable Personal Calculation Engine</p>
             </div>
-            <div id="gpaBadge" class="bg-green-500 text-white px-6 py-3 rounded-lg text-center shadow">
-                <span class="block text-xs uppercase font-semibold">Current GPA</span>
-                <span id="gpaDisplay" class="text-2xl font-black">0.00</span>
+            <div class="flex items-center gap-6">
+                <nav class="flex space-x-2 bg-blue-950 p-1.5 rounded-lg border border-blue-800">
+                    <button id="tabDashboard" onclick="switchTab('dashboard')" class="px-4 py-2 rounded-md text-sm font-medium transition bg-blue-700 text-white">
+                        <i class="fa-solid fa-chart-simple mr-2"></i>Dashboard
+                    </button>
+                    <button id="tabSettings" onclick="switchTab('settings')" class="px-4 py-2 rounded-md text-sm font-medium transition text-blue-200 hover:text-white">
+                        <i class="fa-solid fa-sliders mr-2"></i>Settings
+                    </button>
+                </nav>
+                <div class="bg-green-500 text-white px-6 py-3 rounded-lg text-center shadow min-w-[120px]">
+                    <span class="block text-xs uppercase font-semibold tracking-wider">Current GPA</span>
+                    <span id="gpaDisplay" class="text-2xl font-black">0.00</span>
+                </div>
             </div>
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+    <main class="max-w-6xl mx-auto px-4">
         
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-fit">
-            <h2 class="text-lg font-bold text-gray-800 mb-4">Add Course Module</h2>
-            <form id="subjectForm" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Subject Name / Code</label>
-                    <input type="text" id="subjectName" required placeholder="e.g., EC1020 Electronics" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
+        <div id="dashboardView" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-fit">
+                <h2 class="text-lg font-bold text-gray-800 mb-4"><i class="fa-solid fa-circle-plus text-blue-700 mr-2"></i>Add Course Module</h2>
+                <form id="subjectForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Subject Name / Code</label>
+                        <input type="text" id="subjectName" required placeholder="e.g., EC1020 Electronics" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Credits</label>
+                            <input type="number" id="subjectCredits" required min="1" max="10" value="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Grade</label>
+                            <select id="subjectGradeMenu" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm bg-white">
+                                </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded-md hover:bg-blue-800 transition font-medium text-sm shadow flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Module
+                    </button>
+                </form>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 md:col-span-2">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-gray-800"><i class="fa-solid fa-graduation-cap text-blue-700 mr-2"></i>Saved Course Records</h2>
+                    <span id="subjectCount" class="text-xs font-semibold bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">0 Subjects</span>
                 </div>
                 
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Credits</label>
-                        <input type="number" id="subjectCredits" required min="1" max="6" value="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Grade</label>
-                        <select id="subjectGrade" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
-                            <option value="4.00">A+</option>
-                            <option value="4.00">A</option>
-                            <option value="3.70">A-</option>
-                            <option value="3.30">B+</option>
-                            <option value="3.00">B</option>
-                            <option value="2.70">B-</option>
-                            <option value="2.30">C+</option>
-                            <option value="2.00">C</option>
-                            <option value="1.70">C-</option>
-                            <option value="1.30">D+</option>
-                            <option value="1.00">D</option>
-                            <option value="0.00">E</option>
-                        </select>
-                    </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-200 text-xs font-bold text-gray-500 uppercase bg-gray-50">
+                                <th class="py-3 px-4">Subject</th>
+                                <th class="py-3 px-4 text-center">Credits</th>
+                                <th class="py-3 px-4 text-center">Assigned Grade</th>
+                                <th class="py-3 px-4 text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subjectTableBody" class="divide-y divide-gray-100 text-sm text-gray-700">
+                            </tbody>
+                    </table>
                 </div>
+                
+                <div id="emptyState" class="text-center py-12 text-gray-400 text-sm">
+                    No subjects saved yet. Records will be persisted locally here upon entry.
+                </div>
+            </div>
+        </div>
 
-                <button type="submit" class="w-full bg-blue-700 text-white py-2 rounded-md hover:bg-blue-800 transition font-medium text-sm shadow">
-                    Securely Save Module
+        <div id="settingsView" class="hidden max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-4 mb-6">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800"><i class="fa-solid fa-gear text-blue-700 mr-2"></i>Grading Criteria Setup</h2>
+                    <p class="text-xs text-gray-500 mt-1">Configure your university criteria below. Changes map instantly to all records without loss of data.</p>
+                </div>
+                <button onclick="restoreDefaults()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-1.5 px-3 rounded transition">
+                    <i class="fa-solid fa-arrow-rotate-left mr-1"></i> Reset to Defaults
                 </button>
-            </form>
+            </div>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-3 gap-4 font-bold text-xs uppercase text-gray-500 tracking-wider px-2">
+                    <div>Letter Grade</div>
+                    <div>Grade Point Value (GPV)</div>
+                    <div class="text-center">Action</div>
+                </div>
+                
+                <div id="criteriaRowsContainer" class="space-y-2">
+                    </div>
+
+                <div class="border-t border-dashed border-gray-200 pt-4 flex gap-4">
+                    <input type="text" id="newGradeLetter" placeholder="e.g., A+" class="w-1/2 px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
+                    <input type="number" id="newGradeGPV" step="0.01" min="0" max="10" placeholder="e.g., 4.00" class="w-1/2 px-3 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
+                    <button onclick="addNewCriteriaRow()" class="bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 px-4 py-1.5 rounded-md text-sm font-semibold transition flex items-center gap-1 whitespace-nowrap">
+                        <i class="fa-solid fa-plus"></i> Add Grade
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 md:col-span-2">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-bold text-gray-800">Your Saved Course Records</h2>
-                <span id="subjectCount" class="text-xs font-semibold bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">0 Subjects</span>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="border-b border-gray-200 text-xs font-bold text-gray-500 uppercase bg-gray-50">
-                            <th class="py-3 px-4">Subject</th>
-                            <th class="py-3 px-4 text-center">Credits</th>
-                            <th class="py-3 px-4 text-center">Grade Point</th>
-                            <th class="py-3 px-4 text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="subjectTableBody" class="divide-y divide-gray-100 text-sm text-gray-700">
-                        </tbody>
-                </table>
-            </div>
-            
-            <div id="emptyState" class="text-center py-12 text-gray-400 text-sm">
-                No subjects saved yet. Records will be persisted locally here upon entry.
-            </div>
-        </div>
     </main>
 
     <script>
-        // Data Extraction Layer from Browser LocalStorage Vault
-        // Restores previous session data automatically or initializes an empty array
+        // --- 1. PERSISTENT SYSTEM CONFIGURATION LAYER ---
+        // Your default Faculty grading scheme structure metrics setup fallback
+        const DEFAULT_CRITERIA = [
+            { letter: 'A+', gpv: 4.00 }, { letter: 'A', gpv: 4.00 }, { letter: 'A-', gpv: 3.70 },
+            { letter: 'B+', gpv: 3.30 }, { letter: 'B', gpv: 3.00 }, { letter: 'B-', gpv: 2.70 },
+            { letter: 'C+', gpv: 2.30 }, { letter: 'C', gpv: 2.00 }, { letter: 'C-', gpv: 1.70 },
+            { letter: 'D+', gpv: 1.30 }, { letter: 'D', gpv: 1.00 }, { letter: 'E', gpv: 0.00 }
+        ];
+
+        // Retrieve existing definitions schema configuration or establish structural fallback arrays
+        let gradingCriteria = JSON.parse(localStorage.getItem('gpa_system_criteria')) || DEFAULT_CRITERIA;
+        // User course modules data tracker initialization array extraction 
         let subjects = JSON.parse(localStorage.getItem('my_gpa_data')) || [];
 
+        // DOM Targets Initialization
         const form = document.getElementById('subjectForm');
         const tableBody = document.getElementById('subjectTableBody');
         const emptyState = document.getElementById('emptyState');
         const gpaDisplay = document.getElementById('gpaDisplay');
         const subjectCountLabel = document.getElementById('subjectCount');
+        const subjectGradeMenu = document.getElementById('subjectGradeMenu');
+        const criteriaContainer = document.getElementById('criteriaRowsContainer');
 
-        // Form Submit Controller (Write & Save Data)
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const name = document.getElementById('subjectName').value;
-            const credits = parseInt(document.getElementById('subjectCredits').value);
-            const selectEl = document.getElementById('subjectGrade');
-            const gpv = parseFloat(selectEl.value);
-            const gradeText = selectEl.options[selectEl.selectedIndex].text;
+        // --- 2. PRESENTATION VIEW NAVIGATION ROUTER CONTROLLER ---
+        function switchTab(targetView) {
+            const dashBtn = document.getElementById('tabDashboard');
+            const settBtn = document.getElementById('tabSettings');
+            const dashView = document.getElementById('dashboardView');
+            const settView = document.getElementById('settingsView');
 
-            const newRecord = { id: Date.now(), name, credits, gpv, gradeText };
-            subjects.push(newRecord);
-            
-            saveToLocalStorage();
-            form.reset();
-            document.getElementById('subjectCredits').value = 3; // Reset default credit selection
-            
-            updateUI();
-        });
-
-        // Delete Controller (Modify Storage State)
-        function removeSubject(id) {
-            subjects = subjects.filter(sub => sub.id !== id);
-            saveToLocalStorage();
-            updateUI();
-        }
-
-        // Dropdown Inline Edit Controller (Update Storage State)
-        function changeGradeInline(id, element) {
-            const index = subjects.findIndex(sub => sub.id === id);
-            if (index !== -1) {
-                subjects[index].gpv = parseFloat(element.value);
-                subjects[index].gradeText = element.options[element.selectedIndex].text;
-                saveToLocalStorage();
-                calculateGPA();
+            if (targetView === 'dashboard') {
+                dashView.classList.remove('hidden');
+                settView.classList.add('hidden');
+                dashBtn.className = "px-4 py-2 rounded-md text-sm font-medium transition bg-blue-700 text-white";
+                settBtn.className = "px-4 py-2 rounded-md text-sm font-medium transition text-blue-200 hover:text-white";
+                updateUI(); // Refreshes dropdown choices based on saved modifications
+            } else {
+                dashView.classList.add('hidden');
+                settView.classList.remove('hidden');
+                dashBtn.className = "px-4 py-2 rounded-md text-sm font-medium transition text-blue-200 hover:text-white";
+                settBtn.className = "px-4 py-2 rounded-md text-sm font-medium transition bg-blue-700 text-white";
+                renderSettingsPanel();
             }
         }
 
-        // Browser Storage Synchronization Wrapper
-        function saveToLocalStorage() {
-            localStorage.setItem('my_gpa_data', JSON.stringify(subjects));
-        }
-
-        // Evaluation Logic Core
+        // --- 3. CORE COMPUTATIONAL LOGIC CORE (DYNAMIC RUNTIME MAPPING) ---
         function calculateGPA() {
             if (subjects.length === 0) {
                 gpaDisplay.textContent = "0.00";
@@ -152,10 +182,18 @@
             let totalWeightedPoints = 0;
             let totalCredits = 0;
 
+            // Build dictionary lookup map context for current dynamic values configured
+            const criteriaMap = {};
+            gradingCriteria.forEach(item => {
+                criteriaMap[item.letter] = item.gpv;
+            });
+
             subjects.forEach(sub => {
-                // Filter out non-gpa courses like industrial training automatically
                 if(!sub.name.toLowerCase().includes("industrial training")) {
-                    totalWeightedPoints += (sub.credits * sub.gpv);
+                    // Pull current points dynamically matching stored identifier letter
+                    // Defaults seamlessly to stored historical value fallback if configuration row deleted
+                    const activeGPV = criteriaMap[sub.gradeText] !== undefined ? criteriaMap[sub.gradeText] : sub.gpv;
+                    totalWeightedPoints += (sub.credits * activeGPV);
                     totalCredits += sub.credits;
                 }
             });
@@ -166,14 +204,120 @@
             }
 
             const rawGPA = totalWeightedPoints / totalCredits;
-            // Rounded up to nearest 0.05 per faculty curriculum specifications
+            // Rounded up rule execution matching 0.05 configuration bounds precision standard
             const finalizedGPA = (Math.ceil(rawGPA * 20) / 20).toFixed(2);
-            
             gpaDisplay.textContent = finalizedGPA;
         }
 
-        // UI Presentation Synchronizer
+        // --- 4. DATA MODEL MUTATION HANDLERS (CRUD PERSISTENCE OPERATIONS) ---
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('subjectName').value;
+            const credits = parseInt(document.getElementById('subjectCredits').value);
+            const gradeText = subjectGradeMenu.value; // Store string identification mapping token
+
+            const targetRecord = { id: Date.now(), name, credits, gradeText };
+            subjects.push(targetRecord);
+            
+            saveAppState();
+            form.reset();
+            document.getElementById('subjectCredits').value = 3; 
+            updateUI();
+        });
+
+        function removeSubject(id) {
+            subjects = subjects.filter(sub => sub.id !== id);
+            saveAppState();
+            updateUI();
+        }
+
+        function changeGradeInline(id, element) {
+            const index = subjects.findIndex(sub => sub.id === id);
+            if (index !== -1) {
+                subjects[index].gradeText = element.value;
+                saveAppState();
+                calculateGPA();
+            }
+        }
+
+        // --- 5. SETTINGS PANEL RULES MUTATION SUB-CONTROLLER ---
+        function renderSettingsPanel() {
+            criteriaContainer.innerHTML = '';
+            gradingCriteria.forEach((item, index) => {
+                const row = document.createElement('div');
+                row.className = "grid grid-cols-3 gap-4 items-center bg-gray-50 p-2 rounded-md border border-gray-100";
+                row.innerHTML = `
+                    <input type="text" value="${item.letter}" onchange="updateCriteriaField(${index}, 'letter', this.value)" class="px-2 py-1 border border-gray-300 rounded font-bold text-sm text-gray-800">
+                    <input type="number" step="0.01" min="0" max="10" value="${item.gpv.toFixed(2)}" onchange="updateCriteriaField(${index}, 'gpv', this.value)" class="px-2 py-1 border border-gray-300 rounded text-sm text-gray-700">
+                    <div class="text-center">
+                        <button onclick="deleteCriteriaRow(${index})" class="text-red-500 hover:text-red-700 p-1 text-sm"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                `;
+                criteriaContainer.appendChild(row);
+            });
+        }
+
+        function updateCriteriaField(index, key, value) {
+            if (key === 'gpv') {
+                gradingCriteria[index].gpv = parseFloat(value) || 0.0;
+            } else {
+                gradingCriteria[index].letter = value.trim();
+            }
+            saveAppState();
+            calculateGPA();
+        }
+
+        function addNewCriteriaRow() {
+            const letterInput = document.getElementById('newGradeLetter');
+            const gpvInput = document.getElementById('newGradeGPV');
+            const letter = letterInput.value.trim();
+            const gpv = parseFloat(gpvInput.value);
+
+            if (!letter || isNaN(gpv)) {
+                alert("Please fill in valid Grade Letter and GPV fields values.");
+                return;
+            }
+
+            gradingCriteria.push({ letter, gpv });
+            saveAppState();
+            renderSettingsPanel();
+            
+            letterInput.value = '';
+            gpvInput.value = '';
+        }
+
+        function deleteCriteriaRow(index) {
+            gradingCriteria.splice(index, 1);
+            saveAppState();
+            renderSettingsPanel();
+        }
+
+        function restoreDefaults() {
+            if(confirm("Are you sure you want to revert configurations back to default settings? Your saved subjects records will not be deleted.")) {
+                gradingCriteria = JSON.parse(JSON.stringify(DEFAULT_CRITERIA));
+                saveAppState();
+                renderSettingsPanel();
+            }
+        }
+
+        // --- 6. VIEW SYNCHRONIZATION AND CONTEXT WRAPPER SAVES ---
+        function saveAppState() {
+            localStorage.setItem('my_gpa_data', JSON.stringify(subjects));
+            localStorage.setItem('gpa_system_criteria', JSON.stringify(gradingCriteria));
+        }
+
+        function populateDropdownMenu() {
+            subjectGradeMenu.innerHTML = '';
+            gradingCriteria.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.letter;
+                opt.textContent = `${item.letter} (${item.gpv.toFixed(2)})`;
+                subjectGradeMenu.appendChild(opt);
+            });
+        }
+
         function updateUI() {
+            populateDropdownMenu();
             tableBody.innerHTML = '';
             subjectCountLabel.textContent = `${subjects.length} Subject${subjects.length !== 1 ? 's' : ''}`;
 
@@ -184,28 +328,24 @@
                 
                 subjects.forEach(sub => {
                     const row = document.createElement('tr');
-                    row.className = "hover:bg-gray-50 transition";
+                    row.className = "hover:bg-gray-50 transition border-b border-gray-100";
+                    
+                    // Generate dynamic contextual selectors tailored to current configuration matrix array definitions
+                    let dropdownOptionsHTML = '';
+                    gradingCriteria.forEach(item => {
+                        dropdownOptionsHTML += `<option value="${item.letter}" ${sub.gradeText === item.letter ? 'selected' : ''}>${item.letter}</option>`;
+                    });
+
                     row.innerHTML = `
                         <td class="py-3 px-4 font-medium text-gray-900">${sub.name}</td>
                         <td class="py-3 px-4 text-center">${sub.credits}</td>
                         <td class="py-3 px-4 text-center">
-                            <select onchange="changeGradeInline(${sub.id}, this)" class="bg-gray-100 border border-transparent rounded px-2 py-1 focus:bg-white focus:border-gray-300 text-xs font-semibold cursor-pointer">
-                                <option value="4.00" ${sub.gradeText === 'A+' ? 'selected' : ''}>A+</option>
-                                <option value="4.00" ${sub.gradeText === 'A' ? 'selected' : ''}>A</option>
-                                <option value="3.70" ${sub.gradeText === 'A-' ? 'selected' : ''}>A-</option>
-                                <option value="3.30" ${sub.gradeText === 'B+' ? 'selected' : ''}>B+</option>
-                                <option value="3.00" ${sub.gradeText === 'B' ? 'selected' : ''}>B</option>
-                                <option value="2.70" ${sub.gradeText === 'B-' ? 'selected' : ''}>B-</option>
-                                <option value="2.30" ${sub.gradeText === 'C+' ? 'selected' : ''}>C+</option>
-                                <option value="2.00" ${sub.gradeText === 'C' ? 'selected' : ''}>C</option>
-                                <option value="1.70" ${sub.gradeText === 'C-' ? 'selected' : ''}>C-</option>
-                                <option value="1.30" ${sub.gradeText === 'D+' ? 'selected' : ''}>D+</option>
-                                <option value="1.00" ${sub.gradeText === 'D' ? 'selected' : ''}>D</option>
-                                <option value="0.00" ${sub.gradeText === 'E' ? 'selected' : ''}>E</option>
+                            <select onchange="changeGradeInline(${sub.id}, this)" class="bg-gray-100 border border-transparent rounded px-2 py-1 font-semibold text-xs cursor-pointer focus:bg-white focus:border-gray-300">
+                                ${dropdownOptionsHTML}
                             </select>
                         </td>
                         <td class="py-3 px-4 text-center">
-                            <button onclick="removeSubject(${sub.id})" class="text-red-500 hover:text-red-700 text-xs font-medium bg-red-50 px-2 py-1 rounded transition">Delete</button>
+                            <button onclick="removeSubject(${sub.id})" class="text-red-500 hover:text-red-700 text-xs font-semibold bg-red-50 px-2.5 py-1 rounded transition"><i class="fa-solid fa-trash mr-1"></i>Delete</button>
                         </td>
                     `;
                     tableBody.appendChild(row);
@@ -214,7 +354,7 @@
             calculateGPA();
         }
 
-        // Initializing the View on Application Boot
+        // Initialize App UI Context Loop
         updateUI();
     </script>
 </body>
